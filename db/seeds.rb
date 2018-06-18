@@ -1,5 +1,5 @@
 require "sinatra/activerecord"
-
+require 'rspotify'
 
 
 # Create a User
@@ -10,9 +10,14 @@ weeknd = Artist.find_or_create_by(name: "The Weeknd")
 lana_del_ray = Artist.find_or_create_by(name: "Lana Del Ray")
 #Create some Albums
 trilogy = Album.find_or_create_by(name: "Trilogy")
+trilogy.artists << weeknd
 kissland = Album.find_or_create_by(name: "Kissland")
+kissland.artists << weeknd
 beauty_behind_the_madness = Album.find_or_create_by(name: "Beauty Behind The Madness")
+beauty_behind_the_madness.artists << weeknd
 starboy = Album.find_or_create_by(name: "Starboy")
+starboy.artists << weeknd
+
 #Create some Tracks
 #Trilogy tracks
 tracks =[]
