@@ -59,6 +59,7 @@ stargirl_interlude.artists << lana_del_ray
 playlist1 = Playlist.find_or_create_by(name: "All Weeknd Long")
 tracks.each {|track| playlist1.tracks << track}
 
-
+#user_id
+user_id = 12128242235
 
 
