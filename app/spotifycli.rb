@@ -29,23 +29,35 @@ class SpotifyCLI
     def populate_track_data playlist_arr, playlist_objects   
         playlist_arr.each_with_index do |playlist, index|
             playlist.tracks.each do |track|
-                new_track = Track.find_or_create_by(name: track.name, popularity: track.popularity)
-                #Add to playlist
-                playlist_objects[index].tracks << new_track unless playlist_objects[index].tracks.include? (new_track)
-                #Create Album
-                spotify_album_object = track.album
-                new_album = Album.find_or_create_by(name: spotify_album_object.name)
-                new_album.tracks << new_track unless new_album.tracks.include? new_track
-                #Create Artist
-                spotify_artist_array = track.artists
-                spotify_artist_array.each do |artist|
-                    new_artist = Artist.find_or_create_by(name:artist.name)
-                    new_artist.tracks << new_track unless new_artist.tracks.include? (new_track) 
-                    new_artist.albums << new_album unless new_artist.albums.include? (new_album) 
-                end 
-                
+                new_track = create_track(track, playlist_objects[index])
+                new_album = create_album(track, new_track)
+                new_artist = create_artist(track, new_track, new_album)
+                end    
             end
         end 
     end
-    
+
+    def create_track (track, playlist)
+        new_track = Track.find_or_create_by(name: track.name, popularity: track.popularity)
+        #Add to playlist
+        playlist.tracks << new_track unless playlist.tracks.include? (new_track)
+        new_track
+    end
+
+    def create_album (track, new_track)
+        #Create Album
+        spotify_album_object = track.album
+        new_album = Album.find_or_create_by(name: spotify_album_object.name)
+        new_album.tracks << new_track unless new_album.tracks.include? new_track
+        new_album
+    end
+
+    def create_artist (track, new_track, new_album)
+        #Create Artist
+        spotify_artist_array = track.artists
+        spotify_artist_array.each do |artist|
+        new_artist = Artist.find_or_create_by(name:artist.name)
+        new_artist.tracks << new_track unless new_artist.tracks.include? (new_track) 
+        new_artist.albums << new_album unless new_artist.albums.include? (new_album)
+    end
 end
