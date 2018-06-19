@@ -4,5 +4,7 @@ class Track < ActiveRecord::Base
     belongs_to :album
     has_many :artist_tracks
     has_many :artists, through: :artist_tracks
+    has_many :track_genres
+    has_many :genres, through: :track_genres
     
 end
