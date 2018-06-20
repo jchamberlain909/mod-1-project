@@ -31,42 +31,15 @@ class SpotifyCLI
         else
             puts "Hello, new user. Please enter your spotify id to be added"
             user_id = gets.chomp
-            self.populate_new_user_data (user_id)
+            spotify_user_object = RSpotify::User.find(user_id)
+            self.user = User.create(spotify_user_id: user_id, display_name: spotify_user_object.display_name)
+            puts "Welcome, #{spotify_user_object.display_name}"
+            self.user.populate_user_data (spotify_user_object)
         end
         
     end
-
-    def populate_new_user_data user_id
-        spotify_user_object = RSpotify::User.find(user_id)
-        self.user = User.create(spotify_user_id: user_id, display_name: spotify_user_object.display_name)
-        puts "Welcome, #{spotify_user_object.display_name}"
-        self.populate_playlist_data (spotify_user_object)
-    end
-
-    def populate_playlist_data (spotify_user_object)
-        playlist_arr = spotify_user_object.playlists
-        playlist_objects = playlist_arr.map do |playlist| 
-            new_playlist = Playlist.find_or_create_by(name: playlist.name)
-            self.user.playlists << new_playlist unless self.user.playlists.include? new_playlist
-            new_playlist
-        end 
-        self.populate_track_data(playlist_arr, playlist_objects)
-    end
-
-    def populate_track_data playlist_arr, playlist_objects   
-        playlist_arr.each_with_index do |playlist, index|
-            playlist.tracks.each do |track|
-                new_track = Track.create_track(track, playlist_objects[index])
-                #binding.pry
-                new_album = Album.create_album(track, new_track)
-                new_artists = Artist.create_artists(track, new_track, new_album)
-                
-            end
-        end 
-    end
-
-    
-
-   
-    
 end
+
+
+
+    

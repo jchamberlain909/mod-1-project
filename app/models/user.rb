@@ -2,6 +2,33 @@ class User < ActiveRecord::Base
     has_many :playlists
     attr_accessor :tracks
 
+
+    def populate_user_data (spotify_user_object)
+        self.populate_playlist_data (spotify_user_object)
+    end
+
+    def populate_playlist_data (spotify_user_object)
+        playlist_arr = spotify_user_object.playlists
+        playlist_objects = playlist_arr.map do |playlist| 
+            new_playlist = Playlist.find_or_create_by(name: playlist.name)
+            self.playlists << new_playlist unless self.playlists.include? new_playlist
+            new_playlist
+        end 
+        self.populate_track_data(playlist_arr, playlist_objects)
+    end
+
+    def populate_track_data playlist_arr, playlist_objects   
+        playlist_arr.each_with_index do |playlist, index|
+            playlist.tracks.each do |track|
+                new_track = Track.create_track(track, playlist_objects[index])
+                #binding.pry
+                new_album = Album.create_album(track, new_track)
+                new_artists = Artist.create_artists(track, new_track, new_album)
+                
+            end
+        end 
+    end
+
     def show_playlists
         self.playlists.each {|playlist| puts playlist.name}
     end
