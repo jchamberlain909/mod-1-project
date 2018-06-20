@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
     end
 
     def show_playlists
-        self.playlists.each {|playlist| puts playlist.name}
+        self.playlists.each_with_index {|playlist, index| puts "#{index+1}. #{playlist.name}" }
     end
 
     def create_snapshot

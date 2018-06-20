@@ -9,16 +9,47 @@ class SpotifyCLI
         puts "1. View Playlists"
         puts "2. User Snapshot"
         puts "3. Filter My Tracks By Genre"
+        puts "4. Exit"
         puts "What would you like to do?"
         user_input = gets.chomp  
         case(user_input)
         when '1'
-            self.user.show_playlists
+            playlist_list_options
         when '2'
             self.user.create_snapshot
         when '3'
             self.user.filter_by_genre
+        when '4'
+            puts "Goodbye"
         end      
+    end
+
+    def playlist_list_options
+        self.user.show_playlists
+        puts "Select a playlist by number or type 'back' to return"
+        user_selection = gets.chomp
+        if user_selection.downcase == 'back'
+            user_options
+        else
+            playlist_num = user_selection.to_i
+            playlist = self.user.playlists[playlist_num-1]
+            playlist_options (playlist)
+        end
+    end
+
+    def playlist_options (playlist)
+        puts "1. View Tracks"
+        puts "2. Playlist Snapshot"
+        puts "3. Go Back"
+        user_input = gets.chomp 
+        case(user_input)
+        when '1'
+            playlist.list_tracks
+        when '2'
+            
+        when '3'
+            playlist_list_options
+        end 
     end
 
     def get_user
