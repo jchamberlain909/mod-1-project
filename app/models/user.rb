@@ -2,10 +2,6 @@ class User < ActiveRecord::Base
     has_many :playlists
     attr_accessor :tracks
 
-    def initialize
-        @tracks = get_all_tracks
-    end
-
     def show_playlists
         self.playlists.each {|playlist| puts playlist.name}
     end

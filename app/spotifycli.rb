@@ -1,8 +1,7 @@
 class SpotifyCLI
-    attr_accessor :user_id, :user
+    attr_accessor :user
     def call
         get_user
-        puts "Welcome #{self.user.display_name}"
         user_options
     end 
 
@@ -23,22 +22,25 @@ class SpotifyCLI
     end
 
     def get_user
-        puts "Please enter a spotify user ID:"
-        self.user_id = gets.chomp
-        self.populate_user_data
-    end
+        puts "Please enter your spotify display name:"
+        user_display_name = gets.chomp
 
-    def populate_user_data
-        spotify_user_object = RSpotify::User.find(self.user_id)
-        
-        if(User.find_by(display_name:spotify_user_object.display_name)!=nil)
-            self.user = User.find_by(display_name:spotify_user_object.display_name)
-            
+        if(User.find_by(display_name: user_display_name) != nil)
+            self.user = User.find_by(display_name:user_display_name)
+            puts "Welcome back #{user_display_name}"
         else
-            self.user = User.create(spotify_user_id: self.user_id, display_name: spotify_user_object.display_name)
-            self.populate_playlist_data (spotify_user_object)
+            puts "Hello, new user. Please enter your spotify id to be added"
+            user_id = gets.chomp
+            self.populate_new_user_data (user_id)
         end
         
+    end
+
+    def populate_new_user_data user_id
+        spotify_user_object = RSpotify::User.find(user_id)
+        self.user = User.create(spotify_user_id: user_id, display_name: spotify_user_object.display_name)
+        puts "Welcome, #{spotify_user_object.display_name}"
+        self.populate_playlist_data (spotify_user_object)
     end
 
     def populate_playlist_data (spotify_user_object)
