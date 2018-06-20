@@ -46,7 +46,7 @@ class SpotifyCLI
         when '1'
             playlist.list_tracks
         when '2'
-            
+            playlist.snapshot
         when '3'
             playlist_list_options
         end 
