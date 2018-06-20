@@ -2,8 +2,25 @@ class SpotifyCLI
     attr_accessor :user_id, :user
     def call
         get_user
-        
+        puts "Welcome #{self.user.display_name}"
+        user_options
     end 
+
+    def user_options
+        puts "1. List Playlists"
+        puts "2. User Snapshot"
+        puts "3. Filter My Tracks By Genre"
+        puts "What would you like to do?"
+        user_input = gets.chomp  
+        case(user_input)
+        when '1'
+            self.user.show_playlists
+        when '2'
+            self.user.create_snapshot
+        when '3'
+            self.user.filter_by_genre
+        end      
+    end
 
     def get_user
         puts "Please enter a spotify user ID:"
