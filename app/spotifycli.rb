@@ -97,13 +97,14 @@ class SpotifyCLI
 
     def track_options(track, playlist)
         puts "#{track.name} selected"
-        puts "1. Open track in spotify"
+        puts "1. Open track in web browser (mac only)"
         puts "2. Track Audio Details"
         puts "3. Back"
         user_input = gets.chomp
         case (user_input)
         when '1'
-
+            system("open", track.web_url)
+            track_options(track, playlist)
         when '2'
             track.print_audio_features
             track_options(track, playlist)
