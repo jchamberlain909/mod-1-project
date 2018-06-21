@@ -38,6 +38,7 @@ class SpotifyCLI
     end
 
     def playlist_options (playlist)
+        playlist.get_track_audio_features
         puts "1. View Tracks"
         puts "2. Playlist Snapshot"
         puts "3. Go Back"

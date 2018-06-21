@@ -8,34 +8,38 @@ class Playlist < ActiveRecord::Base
     end
 
     def snapshot
-        puts "Average Energy: " + avg_energy
-        puts "Average Tempo: " + avg_tempo
-        puts "Average Valence: " + avg_valence
-        puts " Average Danceability: " + avg_danceability
-        puts "Duration in ms: " + duration
+        puts "Average Energy: #{avg_energy}"
+        puts "Average Tempo: #{avg_tempo}"
+        puts "Average Valence: #{avg_valence}"
+        puts "Average Danceability: #{avg_danceability}"
+        puts "Duration in ms: #{duration}"  
+    end
+
+    def get_track_audio_features
+        self.tracks.each {|track| track.get_audio_features}
     end
 
     def avg_energy
-        total_energy = self.tracks.reduce {|acc, track| acc+track.audio_features.energy}
+        total_energy = self.tracks.reduce(0.0) {|acc, track| acc+ track.energy}
         total_energy/self.tracks.length
     end
 
     def avg_tempo
-        total_tempo = self.tracks.reduce {|acc, track| acc+track.audio_features.tempo}
+        total_tempo = self.tracks.reduce(0) {|acc, track| acc+ track.tempo}
         total_tempo/self.tracks.length
     end
 
     def avg_valence
-        total_valence = self.tracks.reduce {|acc, track| acc+track.audio_features.valence}
+        total_valence = self.tracks.reduce(0.0) {|acc, track| acc+ track.valence}
         total_valence/self.tracks.length
     end
 
     def avg_danceability
-        total_danceability = self.tracks.reduce {|acc, track| acc+track.audio_features.danceability}
+        total_danceability = self.tracks.reduce(0.0) {|acc, track| acc+ track.danceability}
         total_danceability/self.tracks.length
     end
 
     def duration
-        total_ms = self.tracks.reduce {|acc, track| acc+track.duration_ms}
+        total_ms = self.tracks.reduce(0) {|acc, track| acc+ track.duration_ms}
     end
 end
