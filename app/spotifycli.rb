@@ -27,9 +27,10 @@ class SpotifyCLI
         puts "2. User Snapshot"
         puts "3. Filter My Tracks By Genre"
         puts "4. Update User Data"
-        puts "5. Exit"
+        puts "exit"
         puts "What would you like to do?"
-        user_input = gets.chomp  
+        print "-> "
+        user_input = gets.chomp.downcase
         case(user_input)
         when '1'
             playlist_list_options
@@ -43,7 +44,7 @@ class SpotifyCLI
             spotify_user_object = RSpotify::User.find(self.user.spotify_user_id)
             self.user.populate_user_data (spotify_user_object)
             user_options
-        when '5'
+        when 'exit'
             puts "Goodbye"
         end      
     end
@@ -51,7 +52,8 @@ class SpotifyCLI
     def playlist_list_options
         self.user.show_playlists
         puts "Select a playlist by number or type 'back' to return"
-        user_selection = gets.chomp
+        print "-> "
+        user_selection = gets.chomp.downcase
         if user_selection.downcase == 'back'
             user_options
         else
@@ -65,30 +67,38 @@ class SpotifyCLI
         playlist.get_track_audio_features
         puts "1. View Tracks"
         puts "2. Playlist Snapshot"
-        puts "3. Go Back"
-        user_input = gets.chomp 
+        puts "3. Open Playlist in web browser (mac only)"
+        puts "back"
+        puts "exit"
+        print "-> "
+        user_input = gets.chomp.downcase
         case(user_input)
         when '1'
-            playlist.list_tracks
             track_list_options(playlist)
         when '2'
             playlist.snapshot
             playlist_options(playlist)
         when '3'
+            system("open", playlist.web_url)
+            playlist_options(playlist)
+        when 'back'
             playlist_list_options
-        end 
+        when 'exit'
+            puts "Goodbye"
+        end
     end
 
     
 
     def track_list_options(playlist)
+        playlist.list_tracks
         puts "Select track by number or type 'back' to return:"
-        user_input = gets.chomp
+        user_input = gets.chomp.downcase
         case (user_input)
         when 'back'
             playlist_options (playlist)
         when 'exit'
-
+            puts "Goodbye"
         else
             track = playlist.tracks[user_input.to_i - 1]
             track_options(track, playlist)
@@ -99,8 +109,10 @@ class SpotifyCLI
         puts "#{track.name} selected"
         puts "1. Open track in web browser (mac only)"
         puts "2. Track Audio Details"
-        puts "3. Back"
-        user_input = gets.chomp
+        puts "back"
+        puts "exit"
+        print "-> "
+        user_input = gets.chomp.downcase
         case (user_input)
         when '1'
             system("open", track.web_url)
@@ -108,10 +120,10 @@ class SpotifyCLI
         when '2'
             track.print_audio_features
             track_options(track, playlist)
-        when '3'
+        when 'back'
             track_list_options(playlist)
-        else
-
+        when 'exit'
+            puts "Goodbye"
         end 
 
     end
