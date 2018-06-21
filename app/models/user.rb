@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
     def populate_playlist_data (spotify_user_object)
         playlist_arr = spotify_user_object.playlists
         playlist_objects = playlist_arr.map do |playlist| 
-            new_playlist = Playlist.find_or_create_by(name: playlist.name)
+            new_playlist = Playlist.find_or_create_by(name: playlist.name, spotify_playlist_id: playlist.id, web_url:playlist.external_urls["spotify"])
             self.playlists << new_playlist unless self.playlists.include? new_playlist
             new_playlist
         end 
@@ -21,7 +21,6 @@ class User < ActiveRecord::Base
         playlist_arr.each_with_index do |playlist, index|
             playlist.tracks.each do |track|
                 new_track = Track.create_track(track, playlist_objects[index])
-                #binding.pry
                 new_album = Album.create_album(track, new_track)
                 new_artists = Artist.create_artists(track, new_track, new_album)
                 

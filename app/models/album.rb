@@ -6,7 +6,7 @@ class Album < ActiveRecord::Base
     def self.create_album (track, new_track)
         #Create Album
         spotify_album_object = track.album
-        new_album = Album.find_or_create_by(name: spotify_album_object.name)
+        new_album = Album.find_or_create_by(name: spotify_album_object.name, spotify_album_id: spotify_album_object.id, web_url: spotify_album_object.external_urls["spotify"])
         new_album.tracks << new_track unless new_album.tracks.include? new_track 
         new_album
     end

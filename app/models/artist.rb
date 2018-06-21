@@ -11,7 +11,7 @@ class Artist < ActiveRecord::Base
         #Create Artist
         spotify_artist_array = track.artists
         spotify_artist_array.map do |artist|
-            new_artist = Artist.find_or_create_by(name:artist.name)
+            new_artist = Artist.find_or_create_by(name:artist.name, spotify_artist_id: artist.id, web_url:artist.external_urls["spotify"])
             new_artist.tracks << new_track unless new_artist.tracks.include?(new_track) 
             new_artist.albums << new_album unless new_artist.albums.include?(new_album) 
             self.add_genre(new_artist, artist.genres)
