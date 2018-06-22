@@ -19,11 +19,15 @@ class User < ActiveRecord::Base
 
     def populate_track_data playlist_arr, playlist_objects   
         playlist_arr.each_with_index do |playlist, index|
+            puts "Downloading #{playlist.name}"
+            sleep(1.0)
             playlist.tracks.each do |track|
                 new_track = Track.create_track(track, playlist_objects[index])
-                new_album = Album.create_album(track, new_track)
-                new_artists = Artist.create_artists(track, new_track, new_album)
-                
+                if(Track.find(new_track.id)== nil)
+                    new_album = Album.create_album(track, new_track)
+                    new_artists = Artist.create_artists(track, new_track, new_album)
+                end
+                sleep(0.1)
             end
         end 
     end

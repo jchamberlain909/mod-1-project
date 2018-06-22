@@ -11,11 +11,23 @@ class Playlist < ActiveRecord::Base
         puts "Average Energy: #{avg_energy}"
         puts "Average Tempo: #{avg_tempo}"
         puts "Average Valence: #{avg_valence}"
-        puts "Average Danceability: #{avg_danceability}"
-        puts "Duration in ms: #{duration}"  
+        puts "Average Danceability: #{avg_danceability}"  
+    end
+
+    def format_time time_in_ms
+        minutes = time_in_ms/1000/60
+        hours = 0
+        hours = minutes/60 if minutes > 60
+        minutes = minutes - hours*60
+        if hours > 0
+            "#{hours} hr #{minutes} min"
+        else
+            "#{minutes} min"
+        end
     end
 
     def get_track_audio_features
+        puts "Downloading Track Data"
         self.tracks.each {|track| track.get_audio_features}
     end
 
