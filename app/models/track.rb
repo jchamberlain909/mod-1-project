@@ -25,6 +25,7 @@ class Track < ActiveRecord::Base
     def get_audio_features
         if self.danceability == nil
             audio_features = RSpotify::Track.find(self.spotify_track_id).audio_features 
+            sleep(0.1)
             self.danceability = audio_features.danceability
             self.duration_ms = audio_features.duration_ms
             self.energy = audio_features.energy

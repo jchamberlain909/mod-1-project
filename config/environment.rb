@@ -1,12 +1,14 @@
 require "bundler/setup"
-
+require 'yaml'
 require "sinatra/activerecord"
 
 require 'rspotify'
 
 require_relative '../app/spotifycli.rb'
 
-RSpotify.authenticate("86cd2d897e5941c6969368faab903d9c", "82d553a0e5e54199877af2ce01baa902")
+keys = YAML.load_file('application.yml')
+
+RSpotify.authenticate(keys['CLIENT_ID'], keys['CLIENT_SECRET'])
 
 Bundler.require
 

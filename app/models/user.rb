@@ -22,8 +22,9 @@ class User < ActiveRecord::Base
             puts "Downloading #{playlist.name}"
             sleep(1.0)
             playlist.tracks.each do |track|
-                new_track = Track.create_track(track, playlist_objects[index])
-                if(Track.find(new_track.id)== nil)
+                if(Track.find_by(spotify_track_id: track.id)== nil)
+                
+                    new_track = Track.create_track(track, playlist_objects[index])
                     new_album = Album.create_album(track, new_track)
                     new_artists = Artist.create_artists(track, new_track, new_album)
                 end
@@ -39,10 +40,13 @@ class User < ActiveRecord::Base
     def create_snapshot
         spotify_user_object = RSpotify::User.find("#{self.spotify_user_id}")
         puts "Snapshot"
+        puts ""
         puts "Top 5 Genres"
         puts top_5_genres
+        puts ""
         puts "Top 3 Artists"
         puts top_3_artists
+        puts ""
         puts "Follower Count"
         puts get_follower_count(spotify_user_object)
     end 
@@ -53,7 +57,7 @@ class User < ActiveRecord::Base
 
     def get_genre_list
         genres = []
-        self.tracks = get_all_tracks if self.tracks == nil
+        self.tracks = get_all_tracks
         self.tracks.each do |track|
             track.artists.each do |artist|
                 artist.genres.each do |genre|
@@ -83,7 +87,7 @@ class User < ActiveRecord::Base
 
     def get_artist_list
         artists = []
-        self.tracks = get_all_tracks if self.tracks == nil
+        self.tracks = get_all_tracks
         self.tracks.each do |track|
             track.artists.each {|artist| artists << artist}
         end 
